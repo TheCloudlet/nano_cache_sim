@@ -4,6 +4,8 @@
 ![Standard](https://img.shields.io/badge/c%2B%2B-20-blue.svg)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
+A compile-time, zero-overhead cache hierarchy simulator generator. Powered by Racket (Lisp) meta-generation and C++20 Policy-based Design.
+
 **Stratum** is a high-performance, template-based cache simulator written in C++20. It leverages compile-time polymorphism to define complex cache hierarchies with zero runtime overhead for hierarchy traversal.
 
 Designed for modularity and extensibility, Stratum allows researchers and developers to model arbitrary cache levels (L1, L2, L3, etc.), associativity, block sizes, and replacement policies using clean, declarative C++ templates.
