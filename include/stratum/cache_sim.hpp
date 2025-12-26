@@ -132,7 +132,7 @@ class Cache {
 
   AccessResult Load(uint64_t addr) {
     uint64_t set_idx = (addr / BlockSize) % Sets;
-    uint64_t tag = (addr / BlockSize) / Sets;
+    uint64_t tag = addr / (BlockSize * Sets);
 
     // 1. Tag Lookup
     for (size_t way_idx = 0; way_idx < Ways; ++way_idx) {
@@ -159,7 +159,7 @@ class Cache {
 
   AccessResult Store(uint64_t addr) {
     uint64_t set_idx = (addr / BlockSize) % Sets;
-    uint64_t tag = (addr / BlockSize) / Sets;
+    uint64_t tag = addr / (BlockSize * Sets);
 
     // 1. Tag Lookup
     for (size_t way_idx = 0; way_idx < Ways; ++way_idx) {
@@ -180,15 +180,17 @@ class Cache {
     // 3. Fill and mark dirty
     Fill(set_idx, tag);
 
+    // Mark the newly filled line as dirty
     for (size_t way_idx = 0; way_idx < Ways; ++way_idx) {
-      if (sets_[set_idx][way_idx].valid && sets_[set_idx][way_idx].tag == tag) {
-        sets_[set_idx][way_idx].dirty = true;
-        break;
-      }
+        if (sets_[set_idx][way_idx].valid && sets_[set_idx][way_idx].tag == tag) {
+            sets_[set_idx][way_idx].dirty = true;
+            break;
+        }
     }
 
     return res;
   }
+
 
   // Helper to print stats
   void PrintStats() const {
