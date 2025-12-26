@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -19,14 +18,67 @@ jobs:
           version: 11
           platform: x64
 
+      - name: Setup Racket
+        uses: Bogdanp/setup-racket@v1.11
+        with:
+          architecture: "x64"
+          distribution: "full"
+          variant: "CS"
+          version: "8.2"
+
       - name: Configure CMake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+        run: |
+          mkdir build
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stratum-binaries
+          path: build/bin/
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: stratum-binaries
+          path: bin
+
       - name: Run Unit Tests
-        run: ./build/bin/unit_tests
+        run: |
+          chmod +x bin/unit_tests
+          ./bin/unit_tests
+
+  simulate:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: stratum-binaries
+          path: bin
+
+      - uses: actions/checkout@v4 # Need test data
 
       - name: Run Stratum Simulation
-        run: ./build/bin/stratum
+        run: |
+          chmod +x bin/stratum
+          ./bin/stratum
+
+      - name: Run Generated Simulations
+        run: |
+          if [ -f bin/case_001 ]; then
+            chmod +x bin/case_001
+            ./bin/case_001
+          fi
+          if [ -f bin/case_002 ]; then
+            chmod +x bin/case_002
+            ./bin/case_002
+          fi
