@@ -48,37 +48,39 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: stratum-binaries
-          path: bin
+          path: .
 
       - name: Run Unit Tests
         run: |
-          chmod +x bin/unit_tests
-          ./bin/unit_tests
+          ls -la
+          chmod +x unit_tests
+          ./unit_tests
 
   simulate:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4 # Need test data FIRST
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: stratum-binaries
-          path: bin
-
-      - uses: actions/checkout@v4 # Need test data
+          path: .
 
       - name: Run Stratum Simulation
         run: |
-          chmod +x bin/stratum
-          ./bin/stratum
+          ls -la
+          chmod +x stratum
+          ./stratum
 
       - name: Run Generated Simulations
         run: |
-          if [ -f bin/case_001 ]; then
-            chmod +x bin/case_001
-            ./bin/case_001
+          if [ -f case_001 ]; then
+            chmod +x case_001
+            ./case_001
           fi
-          if [ -f bin/case_002 ]; then
-            chmod +x bin/case_002
-            ./bin/case_002
+          if [ -f case_002 ]; then
+            chmod +x case_002
+            ./case_002
           fi
