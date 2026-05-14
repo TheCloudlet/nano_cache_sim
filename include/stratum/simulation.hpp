@@ -3,13 +3,12 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include <fmt/core.h>
-
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "stratum/cache_sim.hpp"
+#include "stratum/print.hpp"
 #include "stratum/trace_parser.hpp"
 
 namespace stratum {
@@ -47,13 +46,13 @@ void RunTraceSimulation(const std::string& trace_name,
                         const std::string& filepath,
                         const std::vector<std::string>& hierarchy,
                         size_t mem_latency = 100) {
-  fmt::print("\n=========================================================\n");
-  fmt::print("Running Simulation: {} ({})\n", trace_name, filepath);
-  fmt::print("=========================================================\n");
+  Print("\n=========================================================\n");
+  Print("Running Simulation: {} ({})\n", trace_name, filepath);
+  Print("=========================================================\n");
 
   auto ops = ParseTraceFile(filepath);
   if (ops.empty()) {
-    fmt::print("No operations to simulate for {}\n", trace_name);
+    Print("No operations to simulate for {}\n", trace_name);
     return;
   }
 
@@ -83,8 +82,8 @@ void RunTraceSimulation(const std::string& trace_name,
   if (history.size() <= 20) {
     PrintAccessLog(history, trace_addrs);
   } else {
-    fmt::print("\n(Detailed history hidden for large trace: {} ops)\n",
-               history.size());
+    Print("\n(Detailed history hidden for large trace: {} ops)\n",
+          history.size());
   }
 }
 

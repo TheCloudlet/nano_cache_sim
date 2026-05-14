@@ -3,14 +3,13 @@
 #ifndef TRACE_PARSER_HPP
 #define TRACE_PARSER_HPP
 
-#include <fmt/core.h>
-
 #include <cstdint>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "stratum/print.hpp"
 
 namespace stratum {
 
@@ -19,30 +18,33 @@ struct TraceOp {
   uint64_t addr;
 };
 
-inline std::vector<TraceOp> ParseTraceFile(const std::string& filename) {
+/**
+ * ParseTraceFile: Reads memory access patterns from a text file.
+ * Expects format: "L 0x1234" or "S 0x5678" per line.
+ */
+inline std::vector<TraceOp> ParseTraceFile(const std::string& filepath) {
   std::vector<TraceOp> ops;
-  std::ifstream file(filename);
+  std::ifstream infile(filepath);
 
-  if (!file.is_open()) {
-    fmt::print(stderr, "Error: Could not open trace file {}\n", filename);
+  if (!infile.is_open()) {
+    PrintErr("Error: Could not open trace file: {}\n", filepath);
     return ops;
   }
 
   std::string line;
-  while (std::getline(file, line)) {
+  while (std::getline(infile, line)) {
     if (line.empty() || line[0] == '#') continue;
 
     std::stringstream ss(line);
     char type;
     std::string addr_str;
 
-    // Expected format: L 0x1234 or S 0x1234
     if (ss >> type >> addr_str) {
       uint64_t addr = 0;
       try {
         addr = std::stoull(addr_str, nullptr, 16);
       } catch (...) {
-        fmt::print(stderr, "Warning: Skipping invalid line: {}\n", line);
+        PrintErr("Warning: Skipping invalid line: {}\n", line);
         continue;
       }
       ops.push_back({type, addr});

@@ -5,27 +5,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Fetch fmt
-include(FetchContent)
-FetchContent_Declare(
-  fmt
-  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-  GIT_TAG        10.1.0 # Or a recent stable tag
-)
-FetchContent_MakeAvailable(fmt)
-
 # Include directories
 include_directories(include)
 
 # Main Executable
 add_executable(stratum src/main.cpp)
-target_link_libraries(stratum PRIVATE fmt::fmt)
 target_compile_definitions(stratum PRIVATE STRATUM_ROOT="${CMAKE_SOURCE_DIR}")
 
 # Testing
 enable_testing()
 add_executable(unit_tests test/unit/test_main.cpp)
-target_link_libraries(unit_tests PRIVATE fmt::fmt)
 target_compile_definitions(unit_tests PRIVATE STRATUM_ROOT="${CMAKE_SOURCE_DIR}")
 add_test(NAME UnitTests COMMAND unit_tests)
 
