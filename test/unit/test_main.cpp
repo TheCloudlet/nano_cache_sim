@@ -1,4 +1,4 @@
-// Copyright 2025 Yi-Ping Pan (Cloudlet)
+// Copyright 2025-2026 Yi-Ping Pan (Cloudlet)
 
 #include "stratum/cache_sim.hpp"
 #include "stratum/print.hpp"

@@ -1,6 +1,6 @@
 #lang racket
 
-;; Copyright 2025 Yi-Ping Pan (Cloudlet)
+;; Copyright 2025-2026 Yi-Ping Pan (Cloudlet)
 
 ;; =============================================================================
 ;; Stratum Cache Hierarchy DSL Compiler
