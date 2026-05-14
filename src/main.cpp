@@ -14,6 +14,7 @@ using namespace stratum;
 int main() {
   // Define Cache Types
   using MemType = MainMemory<"MainMemory">;
+  // <Name, Next, Sets, Ways, Block, Policy, Latency>
   using L3Type = Cache<"L3", MemType, 8192, 16, 64, LRUPolicy, 20>;
   using L2Type = Cache<"L2", L3Type, 512, 8, 64, LRUPolicy, 10>;
   using L1Type = Cache<"L1", L2Type, 64, 8, 64, LRUPolicy, 4>;

@@ -95,6 +95,12 @@
   (format "  using ~aType = Cache<\"~a\", ~a, ~a, ~a, 64, ~a, ~a>;\n"
           name name next-type sets ways policy lat))
 
+;; Compile full cache hierarchy with a single header comment.
+(define (compile-cache-defs configs)
+  (string-append
+   "  // <Name, Next, Sets, Ways, Block, Policy, Latency>\n"
+   (apply string-append (map compile-cache-def configs))))
+
 ;; Extract hierarchy names from cache layers for stats tracking.
 ;; Input:  ((L1 ...) (L2 ...) (L3 ...))
 ;; Output: '("L1" "L2" "L3" "MainMemory")
@@ -120,7 +126,7 @@
 
   ;; C++ requires bottom-up definition (L3 before L2 before L1)
   (define reversed-layers (reverse layers))
-  (define cache-code (apply string-append (map compile-cache-def reversed-layers)))
+  (define cache-code (compile-cache-defs reversed-layers))
   (define top-level (first (first layers)))  ;; Top-level cache (usually L1)
   (define hierarchy (extract-hierarchy layers))
 
