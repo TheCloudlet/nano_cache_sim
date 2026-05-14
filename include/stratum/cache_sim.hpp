@@ -4,6 +4,7 @@
 #define CACHE_HPP
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <map>
@@ -114,7 +115,7 @@ class Cache {
 
   // Cache State
   // Flattened layout: [Set0_Way0, Set0_Way1... | Set1_Way0, Set1_Way1...]
-  std::vector<Line> sets_;
+  std::array<Line, Sets * Ways> sets_;
   ReplacePolicy policy_;
 
   // Stats
@@ -127,7 +128,6 @@ class Cache {
   template <typename... Args>
   Cache(Args&&... args)
       : next_(std::make_unique<NextLayer>(std::forward<Args>(args)...)),
-        sets_(Sets * Ways),  // Pre-allocate all cache lines
         policy_(Sets, Ways) {}
 
   AccessResult Load(uint64_t addr) {
